@@ -94,7 +94,20 @@
 
           <div class="field">
             <label for="phone">Contact Number<span>*</span></label>
-            <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}" maxlength="10" minlength="10" inputmode="numeric" autocomplete="tel-national" placeholder="10-digit mobile number" oninput="this.value=this.value.replace(/\D/g,'').slice(0,10)" />
+            <div class="phone-row">
+              <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}" maxlength="10" minlength="10" inputmode="numeric" autocomplete="tel-national" placeholder="10-digit mobile number" oninput="this.value=this.value.replace(/\D/g,'').slice(0,10); refreshOtpUi('hero')" />
+              <button type="button" class="otp-btn" id="hero-send-otp" onclick="requestOtp('hero')" disabled>Send OTP</button>
+            </div>
+          </div>
+
+          <div class="field otp-field" id="hero-otp-field" hidden>
+            <label for="hero-otp">Enter OTP<span>*</span></label>
+            <div class="phone-row">
+              <input type="text" id="hero-otp" pattern="[0-9]{4,6}" maxlength="6" minlength="4" inputmode="numeric" placeholder="Enter the code sent via SMS" oninput="this.value=this.value.replace(/\D/g,'').slice(0,6)" />
+              <button type="button" class="otp-btn otp-btn-verify" onclick="confirmOtp('hero')">Verify</button>
+            </div>
+            <span class="otp-status" id="hero-otp-status"></span>
+          </div>
 
           <div class="field">
             <label for="clinic">Preferred Clinic<span>*</span></label>
@@ -111,19 +124,7 @@
 
           <div class="field">
             <label for="email">Email Address<span>*</span></label>
-            <div class="phone-row">
-              <input type="email" id="email" name="email" required placeholder="name@example.com" oninput="refreshOtpUi('hero')" />
-              <button type="button" class="otp-btn" id="hero-send-otp" onclick="sendOtp('hero')" disabled>Send OTP</button>
-            </div>
-          </div>
-
-          <div class="field otp-field" id="hero-otp-field" hidden>
-            <label for="hero-otp">Enter OTP<span>*</span></label>
-            <div class="phone-row">
-              <input type="text" id="hero-otp" pattern="[0-9]{6}" maxlength="6" minlength="6" inputmode="numeric" placeholder="6-digit code from email" oninput="this.value=this.value.replace(/\D/g,'').slice(0,6)" />
-              <button type="button" class="otp-btn otp-btn-verify" onclick="verifyOtp('hero')">Verify</button>
-            </div>
-            <span class="otp-status" id="hero-otp-status"></span>
+            <input type="email" id="email" name="email" required placeholder="name@example.com" />
           </div>
 
           <div class="field">
@@ -401,7 +402,19 @@
         </div>
         <div class="field">
           <label for="exit-phone">Contact Number<span>*</span></label>
-          <input type="tel" id="exit-phone" name="phone" required pattern="[0-9]{10}" maxlength="10" minlength="10" inputmode="numeric" autocomplete="tel-national" placeholder="10-digit mobile number" oninput="this.value=this.value.replace(/\D/g,'').slice(0,10)" />
+          <div class="phone-row">
+            <input type="tel" id="exit-phone" name="phone" required pattern="[0-9]{10}" maxlength="10" minlength="10" inputmode="numeric" autocomplete="tel-national" placeholder="10-digit mobile number" oninput="this.value=this.value.replace(/\D/g,'').slice(0,10); refreshOtpUi('exit_popup')" />
+            <button type="button" class="otp-btn" id="exit_popup-send-otp" onclick="requestOtp('exit_popup')" disabled>Send OTP</button>
+          </div>
+        </div>
+
+        <div class="field otp-field" id="exit_popup-otp-field" hidden>
+          <label for="exit-otp">Enter OTP<span>*</span></label>
+          <div class="phone-row">
+            <input type="text" id="exit-otp" pattern="[0-9]{4,6}" maxlength="6" minlength="4" inputmode="numeric" placeholder="Enter the code sent via SMS" oninput="this.value=this.value.replace(/\D/g,'').slice(0,6)" />
+            <button type="button" class="otp-btn otp-btn-verify" onclick="confirmOtp('exit_popup')">Verify</button>
+          </div>
+          <span class="otp-status" id="exit_popup-otp-status"></span>
         </div>
         <div class="field">
           <label for="exit-clinic">Preferred Clinic<span>*</span></label>
@@ -417,19 +430,7 @@
         </div>
         <div class="field">
           <label for="exit-email">Email Address<span>*</span></label>
-          <div class="phone-row">
-            <input type="email" id="exit-email" name="email" required placeholder="name@example.com" oninput="refreshOtpUi('exit_popup')" />
-            <button type="button" class="otp-btn" id="exit_popup-send-otp" onclick="sendOtp('exit_popup')" disabled>Send OTP</button>
-          </div>
-        </div>
-
-        <div class="field otp-field" id="exit_popup-otp-field" hidden>
-          <label for="exit-otp">Enter OTP<span>*</span></label>
-          <div class="phone-row">
-            <input type="text" id="exit-otp" pattern="[0-9]{6}" maxlength="6" minlength="6" inputmode="numeric" placeholder="6-digit code from email" oninput="this.value=this.value.replace(/\D/g,'').slice(0,6)" />
-            <button type="button" class="otp-btn otp-btn-verify" onclick="verifyOtp('exit_popup')">Verify</button>
-          </div>
-          <span class="otp-status" id="exit_popup-otp-status"></span>
+          <input type="email" id="exit-email" name="email" required placeholder="name@example.com" />
         </div>
         <div class="field">
           <label for="exit-budget">Your Budget<span>*</span></label>
@@ -463,6 +464,42 @@
       <video id="modalVideo" controls playsinline></video>
     </div>
   </div>
+
+  <!-- ===== MSG91 OTP Widget (SMS) ===== -->
+  <script type="text/javascript">
+    // MSG91 OTP Widget credentials — SMS OTP (account "digiveritaz")
+    var msg91Configuration = {
+      widgetId: '36667a67436e393233353835',
+      tokenAuth: '520932TU9OQwuB86a3942beP1',
+      exposeMethods: true,     // exposes window.sendOtp / verifyOtp / retryOtp
+      captchaRenderId: '',     // leave '' unless you render a visible captcha box
+      success: function (data) {},   // widget-level callbacks (unused — handled per-form below)
+      failure: function (error) {}
+    };
+    // Resilient loader: falls back to the phone91 CDN if msg91 is unreachable
+    (function loadOtpScript(urls) {
+      var i = 0;
+      function attempt() {
+        var s = document.createElement('script');
+        s.src = urls[i];
+        s.async = true;
+        s.onload = function () {
+          if (typeof window.initSendOTP === 'function') {
+            window.initSendOTP(msg91Configuration);
+          }
+        };
+        s.onerror = function () {
+          i++;
+          if (i < urls.length) { attempt(); }
+        };
+        document.head.appendChild(s);
+      }
+      attempt();
+    })([
+      'https://verify.msg91.com/otp-provider.js',
+      'https://verify.phone91.com/otp-provider.js'
+    ]);
+  </script>
 
   <script>
     const modal = document.getElementById('videoModal');
@@ -555,34 +592,127 @@
       window.location.href = 'thank-you.html';
     }
 
-    // ===== Leads + Email OTP via Apps Script =====
+    // ===== Leads via Apps Script + Mobile SMS OTP via MSG91 =====
     const LEADS_ENDPOINT = 'https://script.google.com/macros/s/AKfycby0ybyGTsMyaWn-3l0T1ZDmcy5w4GjZO4-63lpNG4mULTJJD69jyvVCGwgLikBEbhZjSA/exec';
-    const verifiedEmail = { hero: null, exit_popup: null };
 
-    function getEmailEl(source) {
-      return source === 'hero' ? document.getElementById('email') : document.getElementById('exit-email');
+    // Per-form state: which phone number was verified, the MSG91 request id for the
+    // current send, and whether an OTP has been sent.
+    const verifiedPhone = { hero: null, exit_popup: null };
+    const otpRequestId  = { hero: null, exit_popup: null };
+    const otpSent       = { hero: false, exit_popup: false };
+
+    function getPhoneEl(source) {
+      return source === 'hero' ? document.getElementById('phone') : document.getElementById('exit-phone');
     }
     function getOtpEl(source) {
       return source === 'hero' ? document.getElementById('hero-otp') : document.getElementById('exit-otp');
     }
-    function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+    // Indian mobile: 10 digits, first digit 6-9
+    function isValidPhone(v) { return /^[6-9]\d{9}$/.test(v); }
+    // True once the MSG91 widget has loaded and exposed its methods
+    function msg91Ready() {
+      return typeof window.sendOtp === 'function' && typeof window.verifyOtp === 'function';
+    }
 
     function refreshOtpUi(source) {
-      const email = getEmailEl(source).value.trim();
+      const phone = getPhoneEl(source).value.trim();
       const sendBtn = document.getElementById(source + '-send-otp');
-      if (verifiedEmail[source] && verifiedEmail[source] !== email) {
-        verifiedEmail[source] = null;
+      // If the number changed after sending/verifying, reset the OTP UI for this form
+      if ((verifiedPhone[source] || otpSent[source]) && verifiedPhone[source] !== phone) {
+        verifiedPhone[source] = null;
+        otpSent[source] = false;
+        otpRequestId[source] = null;
         document.getElementById(source + '-otp-field').hidden = true;
         const s = document.getElementById(source + '-otp-status');
         s.textContent = ''; s.className = 'otp-status';
         sendBtn.textContent = 'Send OTP';
-        getEmailEl(source).readOnly = false;
+        getPhoneEl(source).readOnly = false;
         const otpEl = getOtpEl(source);
         if (otpEl) { otpEl.readOnly = false; otpEl.value = ''; }
       }
-      const isVerified = verifiedEmail[source] === email;
-      sendBtn.disabled = !isValidEmail(email) || isVerified;
+      const isVerified = verifiedPhone[source] === phone;
+      sendBtn.disabled = !isValidPhone(phone) || isVerified;
       if (isVerified) sendBtn.textContent = '✓ Verified';
+    }
+
+    // Send (or resend) the OTP via SMS through the MSG91 widget
+    function requestOtp(source) {
+      const phone = getPhoneEl(source).value.trim();
+      if (!isValidPhone(phone)) return;
+      const btn = document.getElementById(source + '-send-otp');
+      const status = document.getElementById(source + '-otp-status');
+      const original = btn.textContent;
+
+      if (!msg91Ready()) {
+        status.textContent = 'OTP service still loading. Please try again in a moment.';
+        status.className = 'otp-status otp-err';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = otpSent[source] ? 'Resending…' : 'Sending…';
+      status.textContent = '';
+      status.className = 'otp-status';
+
+      const onSent = (data) => {
+        if (data && data.message) otpRequestId[source] = data.message;
+        otpSent[source] = true;
+        document.getElementById(source + '-otp-field').hidden = false;
+        getOtpEl(source).focus();
+        btn.textContent = 'Resend OTP';
+        btn.disabled = false;
+        status.textContent = 'OTP sent via SMS to +91 ' + phone;
+        status.className = 'otp-status otp-info';
+      };
+      const onErr = (err) => {
+        btn.textContent = original;
+        btn.disabled = false;
+        status.textContent = (err && err.message) ? err.message : 'Could not send OTP. Try again.';
+        status.className = 'otp-status otp-err';
+      };
+
+      // MSG91 expects the number with country code and no "+", e.g. 91XXXXXXXXXX
+      if (otpSent[source]) {
+        window.retryOtp(null, onSent, onErr, otpRequestId[source] || undefined);
+      } else {
+        window.sendOtp('91' + phone, onSent, onErr);
+      }
+    }
+
+    // Verify the code the user received via SMS
+    function confirmOtp(source) {
+      const phone = getPhoneEl(source).value.trim();
+      const code = getOtpEl(source).value;
+      const status = document.getElementById(source + '-otp-status');
+      if (!/^\d{4,6}$/.test(code)) {
+        status.textContent = 'Enter the code you received.';
+        status.className = 'otp-status otp-err';
+        return;
+      }
+      if (!msg91Ready()) {
+        status.textContent = 'OTP service still loading. Please try again in a moment.';
+        status.className = 'otp-status otp-err';
+        return;
+      }
+
+      window.verifyOtp(
+        code,
+        (data) => {
+          verifiedPhone[source] = phone;
+          status.textContent = '✓ Mobile number verified';
+          status.className = 'otp-status otp-ok';
+          getPhoneEl(source).readOnly = true;
+          getOtpEl(source).readOnly = true;
+          const sendBtn = document.getElementById(source + '-send-otp');
+          sendBtn.textContent = '✓ Verified';
+          sendBtn.disabled = true;
+        },
+        (err) => {
+          status.textContent = (err && err.message) ? err.message : 'Incorrect or expired code. Try again.';
+          status.className = 'otp-status otp-err';
+        },
+        otpRequestId[source] || undefined
+      );
     }
 
     async function apiPost(payload) {
@@ -594,88 +724,26 @@
       return res.json();
     }
 
-    async function sendOtp(source) {
-      const email = getEmailEl(source).value.trim();
-      if (!isValidEmail(email)) return;
-      const btn = document.getElementById(source + '-send-otp');
-      const status = document.getElementById(source + '-otp-status');
-      const original = btn.textContent;
-      btn.disabled = true;
-      btn.textContent = 'Sending…';
-      status.textContent = '';
-      status.className = 'otp-status';
-      try {
-        const data = await apiPost({ action: 'send-otp', email });
-        if (data.ok) {
-          document.getElementById(source + '-otp-field').hidden = false;
-          getOtpEl(source).focus();
-          btn.textContent = 'Resend OTP';
-          btn.disabled = false;
-          status.textContent = 'OTP sent to ' + email + ' (check inbox & spam)';
-          status.className = 'otp-status otp-info';
-        } else {
-          btn.textContent = original;
-          btn.disabled = false;
-          status.textContent = data.error || 'Could not send OTP. Try again.';
-          status.className = 'otp-status otp-err';
-        }
-      } catch (err) {
-        btn.textContent = original;
-        btn.disabled = false;
-        status.textContent = 'Network error. Try again.';
-        status.className = 'otp-status otp-err';
-      }
-    }
-
-    async function verifyOtp(source) {
-      const email = getEmailEl(source).value.trim();
-      const code = getOtpEl(source).value;
-      const status = document.getElementById(source + '-otp-status');
-      if (!/^\d{6}$/.test(code)) {
-        status.textContent = 'Enter the 6-digit code.';
-        status.className = 'otp-status otp-err';
-        return;
-      }
-      try {
-        const data = await apiPost({ action: 'verify-otp', email, code });
-        if (data.verified) {
-          verifiedEmail[source] = email;
-          status.textContent = '✓ Email verified';
-          status.className = 'otp-status otp-ok';
-          getEmailEl(source).readOnly = true;
-          getOtpEl(source).readOnly = true;
-          const sendBtn = document.getElementById(source + '-send-otp');
-          sendBtn.textContent = '✓ Verified';
-          sendBtn.disabled = true;
-        } else {
-          status.textContent = 'Incorrect or expired code. Try again.';
-          status.className = 'otp-status otp-err';
-        }
-      } catch (err) {
-        status.textContent = 'Network error. Try again.';
-        status.className = 'otp-status otp-err';
-      }
-    }
-
     function submitLead(e, source) {
       e.preventDefault();
       const form = e.target;
       const fd = new FormData(form);
-      const email = (fd.get('email') || '').toString().trim();
+      const phone = (fd.get('phone') || '').toString().trim();
 
-      if (verifiedEmail[source] !== email) {
-        alert('Please verify your email with the OTP first.');
+      if (verifiedPhone[source] !== phone) {
+        alert('Please verify your mobile number with the OTP first.');
         return;
       }
 
       const payload = {
         source: source,
         name: (fd.get('name') || '').toString().trim(),
-        phone: (fd.get('phone') || '').toString().trim(),
+        phone: phone,
         clinic: (fd.get('clinic') || '').toString().trim(),
-        email: email,
+        email: (fd.get('email') || '').toString().trim(),
         budget: (fd.get('budget') || '').toString().trim(),
-        consent: fd.get('consent') ? true : false
+        consent: fd.get('consent') ? true : false,
+        phone_verified: true
       };
       const btn = form.querySelector('button[type="submit"]');
       if (btn) { btn.disabled = true; btn.style.opacity = '0.7'; btn.style.cursor = 'wait'; btn.textContent = 'Submitting…'; }
@@ -686,8 +754,8 @@
       setTimeout(() => { window.location.href = 'thank-you.html'; }, 3000);
     }
 
-    window.sendOtp = sendOtp;
-    window.verifyOtp = verifyOtp;
+    window.requestOtp = requestOtp;
+    window.confirmOtp = confirmOtp;
     window.refreshOtpUi = refreshOtpUi;
     window.submitLead = submitLead;
     // Expose so inline onclick handlers can find them regardless of scope
